@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Timer from './components/Timer'
+import Noise from './components/Noise'
 import './App.css'
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
   return (
     <div className="App">
       <Timer />
+      <Noise />
     </div>
   )
 }

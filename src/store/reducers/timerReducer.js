@@ -23,6 +23,7 @@ const timerReducer = (state = initialState, action) => {
       return {
         ...state,
         isWorking: !state.isWorking,
+        isRunning: false,
         timeLeft: !state.isWorking ? 25 * 60 : 5 * 60,
       };
     default:

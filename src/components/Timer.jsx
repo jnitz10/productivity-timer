@@ -7,12 +7,16 @@ import {
   tick,
   switchSession
 } from "../store/actions/timerActions"
+import bell from "../assets/bell.mp3";
 
 const Timer = () => {
   const dispatch = useDispatch();
   const { timeLeft, isWorking, isRunning } = useSelector(
     (state) => state.timerReducer
   );
+
+  const [isFinished, setIsFinished] = useState(false);
+  const bellRef = React.createRef();
 
   const handleStart = () => {
     dispatch(startTimer());
@@ -24,6 +28,7 @@ const Timer = () => {
 
   const handleStop = () => {
     dispatch(stopTimer());
+    setIsFinished(false); // stop the bell if ringing
   };
 
   useEffect(() => {
@@ -36,10 +41,21 @@ const Timer = () => {
     } else if (timeLeft === 0) {
       clearInterval(timer);
       dispatch(switchSession());
+      setIsFinished(true);
     }
 
     return () => clearInterval(timer);
   }, [isRunning, timeLeft, dispatch]);
+
+  useEffect(() => {
+    if (isFinished) {
+      bellRef.current.play();
+      setTimeout(() => {
+        setIsFinished(false);
+      }, 5000);
+    }
+  }, [isFinished]);
+
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -59,6 +75,7 @@ const Timer = () => {
           <button onClick={handleStop}>Stop</button>
         </div>
       )}
+      <audio ref={bellRef} src={bell} />
     </div>
   );
 };
